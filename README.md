@@ -8,6 +8,8 @@ You must also have the LaTeX package PGF/TikZ version 3.0 or later installed. Yo
 
 ## Example
 
+This will show a graph in IJulia as an SVG.
+
 ```julia
 using Graphs
 using TikzGraphs
