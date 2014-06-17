@@ -9,17 +9,19 @@ type LayeredLayout
 end
 
 type SpringLayout
+  randomSeed
+  SpringLayout(;randomSeed=0) = new(randomSeed)
 end
 
 function plot(g::GenericGraph)
   return plot(g, LayeredLayout())
 end
 
-function plotHelper(g::GenericGraph, libraryname::String, layoutname::String)
+function plotHelper(g::GenericGraph, libraryname::String, layoutname::String, options::String = "")
   preamble = "\\usetikzlibrary{graphs}\n"
   preamble *= "\\usetikzlibrary{graphdrawing}\n"
   preamble *= "\\usegdlibrary{$libraryname}\n"
-  data = "\\graph [$layoutname] {\n"
+  data = "\\graph [$layoutname, $options] {\n"
   for e in edges(g)
     a = source(e, g)
     b = target(e, g)
@@ -34,7 +36,8 @@ function plot(g::GenericGraph, p::LayeredLayout)
 end
 
 function plot(g::GenericGraph, p::SpringLayout)
-  plotHelper(g, "force", "spring layout")
+  options = "random seed = $(p.randomSeed)"
+  plotHelper(g, "force", "spring layout", options)
 end
 
 end # module
