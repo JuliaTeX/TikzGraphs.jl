@@ -1,6 +1,6 @@
 module TikzGraphs
 
-export plot
+export plot, LayeredLayout, SpringLayout
 
 using TikzPictures
 using Graphs
