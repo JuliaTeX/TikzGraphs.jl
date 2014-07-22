@@ -22,7 +22,7 @@ end
 
 type Spring <: Layout
   randomSeed
-  SpringLayout(;randomSeed=0) = new(randomSeed)
+  Spring(;randomSeed=0) = new(randomSeed)
 end
 
 end
