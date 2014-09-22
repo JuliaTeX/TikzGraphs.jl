@@ -2,11 +2,7 @@ module TikzGraphs
 
 export plot, Layouts
 
-preamble = """
-\\usetikzlibrary{graphs}
-\\usetikzlibrary{graphdrawing}
-"""
-
+preamble = readall(joinpath(Pkg.dir("TikzGraphs"), "src", "preamble.tex"))
 
 using TikzPictures
 using Graphs
@@ -30,7 +26,7 @@ end
 using .Layouts
 
 plot(g::GenericGraph) = plot(g, Layered())
-plot(g::GenericGraph, labels::AbstractArray{ASCIIString,1}) = plot(g, Layered(), labels)
+plot(g::GenericGraph, labels::Vector{String}) = plot(g, Layered(), labels)
 
 function plotHelper(g::GenericGraph, libraryname::String, layoutname::String, options::String)
   o = IOBuffer()
@@ -51,7 +47,7 @@ function plotHelper(g::GenericGraph, libraryname::String, layoutname::String, op
   TikzPicture(takebuf_string(o), preamble=mypreamble)
 end
 
-function plotHelper(g::GenericGraph, libraryname::String, layoutname::String, options::String, labels::AbstractArray{ASCIIString,1})
+function plotHelper{T<:String}(g::GenericGraph, libraryname::String, layoutname::String, options::String, labels::Vector{T})
   o = IOBuffer()
   println(o, "\\graph [$layoutname, $options] {")
   for e in edges(g)
@@ -79,11 +75,11 @@ function plot(g::GenericGraph, p::Spring)
   plotHelper(g, "force", "spring layout", options)
 end
 
-function plot(g::GenericGraph, p::Layered, labels::AbstractArray{ASCIIString,1})
+function plot(g::GenericGraph, p::Layered, labels::Vector{String})
   plotHelper(g, "layered", "layered layout", "", labels)
 end
 
-function plot(g::GenericGraph, p::Spring, labels::AbstractArray{ASCIIString,1})
+function plot(g::GenericGraph, p::Spring, labels::Vector{String})
   options = "random seed = $(p.randomSeed)"
   plotHelper(g, "force", "spring layout", options, labels)
 end
