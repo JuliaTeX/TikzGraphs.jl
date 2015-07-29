@@ -89,7 +89,7 @@ end
 ####### LightGraphs support #######
 ###################################
 plot(g::LightGraphs.SimpleGraph) = plot(g, Layered())
-plot(g::LightGraphs.SimpleGraph, labels::Vector{String}) = plot(g, Layered(), labels)
+plot{T<:String}(g::LightGraphs.SimpleGraph, labels::Vector{T}) = plot(g, Layered(), labels)
 
 function plotHelper(g::LightGraphs.SimpleGraph, libraryname::String, layoutname::String, options::String)
   o = IOBuffer()
@@ -138,11 +138,11 @@ function plot(g::LightGraphs.SimpleGraph, p::Spring)
   plotHelper(g, "force", "spring layout", options)
 end
 
-function plot(g::LightGraphs.SimpleGraph, p::Layered, labels::Vector{String})
+function plot{T<:String}(g::LightGraphs.SimpleGraph, p::Layered, labels::Vector{T})
   plotHelper(g, "layered", "layered layout", "", labels)
 end
 
-function plot(g::LightGraphs.SimpleGraph, p::Spring, labels::Vector{String})
+function plot{T<:String}(g::LightGraphs.SimpleGraph, p::Spring, labels::Vector{T})
   options = "random seed = $(p.randomSeed)"
   plotHelper(g, "force", "spring layout", options, labels)
 end
