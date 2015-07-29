@@ -94,13 +94,13 @@ plot{T<:String}(g::LightGraphs.SimpleGraph, labels::Vector{T}) = plot(g, Layered
 function plotHelper(g::LightGraphs.SimpleGraph, libraryname::String, layoutname::String, options::String)
   o = IOBuffer()
   println(o, "\\graph [$layoutname, $options] {")
-  for e in edges(g)
+  for e in LightGraphs.edges(g)
     a = src(e)
     b = dst(e)
     println(o, "$a -> $b;")
   end
   # include isolated nodes
-  for v in vertices(g)
+  for v in LightGraphs.vertices(g)
     if indegree(g, v) == 0 && outdegree(g, v) == 0
       println(o, "$v;")
     end
@@ -113,7 +113,7 @@ end
 function plotHelper{T<:String}(g::LightGraphs.SimpleGraph, libraryname::String, layoutname::String, options::String, labels::Vector{T})
   o = IOBuffer()
   println(o, "\\graph [$layoutname, $options] {")
-  for e in edges(g)
+  for e in LightGraphs.edges(g)
     a = src(e)
     b = dst(e)
     println(o, "\"$(labels[a])\" -> \"$(labels[b])\";")
