@@ -27,18 +27,18 @@ end
 using .Layouts
 
 plot(g::GenericGraph) = plot(g, Layered())
-plot(g::GenericGraph, labels::Vector{String}) = plot(g, Layered(), labels)
+plot{T<:String}(g::GenericGraph, labels::Vector{T}) = plot(g, Layered(), labels)
 
 function plotHelper(g::GenericGraph, libraryname::String, layoutname::String, options::String)
   o = IOBuffer()
   println(o, "\\graph [$layoutname, $options] {")
-  for e in edges(g)
+  for e in Graphs.edges(g)
     a = source(e, g)
     b = target(e, g)
     println(o, "$a -> $b;")
   end
   # include isolated nodes
-  for v in vertices(g)
+  for v in Graphs.vertices(g)
     if in_degree(v, g) == 0 && out_degree(v, g) == 0
       println(o, "$v;")
     end
@@ -51,13 +51,13 @@ end
 function plotHelper{T<:String}(g::GenericGraph, libraryname::String, layoutname::String, options::String, labels::Vector{T})
   o = IOBuffer()
   println(o, "\\graph [$layoutname, $options] {")
-  for e in edges(g)
+  for e in Graphs.edges(g)
     a = source(e, g)
     b = target(e, g)
     println(o, "\"$(labels[a])\" -> \"$(labels[b])\";")
   end
   # include isolated nodes
-  for v in vertices(g)
+  for v in Graphs.vertices(g)
     if in_degree(v, g) == 0 && out_degree(v, g) == 0
       println(o, "\"$(labels[v])\";")
     end
@@ -76,11 +76,11 @@ function plot(g::GenericGraph, p::Spring)
   plotHelper(g, "force", "spring layout", options)
 end
 
-function plot(g::GenericGraph, p::Layered, labels::Vector{String})
+function plot{T<:String}(g::GenericGraph, p::Layered, labels::Vector{T})
   plotHelper(g, "layered", "layered layout", "", labels)
 end
 
-function plot(g::GenericGraph, p::Spring, labels::Vector{String})
+function plot{T<:String}(g::GenericGraph, p::Spring, labels::Vector{T})
   options = "random seed = $(p.randomSeed)"
   plotHelper(g, "force", "spring layout", options, labels)
 end
@@ -119,7 +119,7 @@ function plotHelper{T<:String}(g::LightGraphs.SimpleGraph, libraryname::String, 
     println(o, "\"$(labels[a])\" -> \"$(labels[b])\";")
   end
   # include isolated nodes
-  for v in vertices(g)
+  for v in LightGraphs.vertices(g)
     if indegree(g, v) == 0 && outdegree(g, v) == 0
       println(o, "\"$(labels[v])\";")
     end
