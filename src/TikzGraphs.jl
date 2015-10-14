@@ -2,7 +2,7 @@ module TikzGraphs
 
 export plot, Layouts
 
-preamble = readall(joinpath(Pkg.dir("TikzGraphs"), "src", "preamble.tex"))
+preamble = readall(joinpath(dirname(@__FILE__), "..", "src", "preamble.tex"))
 
 using TikzPictures
 using Graphs
