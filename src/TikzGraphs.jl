@@ -28,9 +28,9 @@ end
 using .Layouts
 
 plot(g::GenericGraph) = plot(g, Layered())
-plot{T<:String}(g::GenericGraph, labels::Vector{T}) = plot(g, Layered(), labels)
+plot{T<:AbstractString}(g::GenericGraph, labels::Vector{T}) = plot(g, Layered(), labels)
 
-function plotHelper(g::GenericGraph, libraryname::String, layoutname::String, options::String)
+function plotHelper(g::GenericGraph, libraryname::AbstractString, layoutname::AbstractString, options::AbstractString)
   o = IOBuffer()
   println(o, "\\graph [$layoutname, $options] {")
   for e in Graphs.edges(g)
@@ -49,7 +49,7 @@ function plotHelper(g::GenericGraph, libraryname::String, layoutname::String, op
   TikzPicture(takebuf_string(o), preamble=mypreamble)
 end
 
-function plotHelper{T<:String}(g::GenericGraph, libraryname::String, layoutname::String, options::String, labels::Vector{T})
+function plotHelper{T<:AbstractString}(g::GenericGraph, libraryname::AbstractString, layoutname::AbstractString, options::AbstractString, labels::Vector{T})
   o = IOBuffer()
   println(o, "\\graph [$layoutname, $options] {")
   for e in Graphs.edges(g)
@@ -77,11 +77,11 @@ function plot(g::GenericGraph, p::Spring)
   plotHelper(g, "force", "spring layout", options)
 end
 
-function plot{T<:String}(g::GenericGraph, p::Layered, labels::Vector{T})
+function plot{T<:AbstractString}(g::GenericGraph, p::Layered, labels::Vector{T})
   plotHelper(g, "layered", "layered layout", "", labels)
 end
 
-function plot{T<:String}(g::GenericGraph, p::Spring, labels::Vector{T})
+function plot{T<:AbstractString}(g::GenericGraph, p::Spring, labels::Vector{T})
   options = "random seed = $(p.randomSeed)"
   plotHelper(g, "force", "spring layout", options, labels)
 end
@@ -90,9 +90,9 @@ end
 ####### LightGraphs support #######
 ###################################
 plot(g::LightGraphs.SimpleGraph) = plot(g, Layered())
-plot{T<:String}(g::LightGraphs.SimpleGraph, labels::Vector{T}) = plot(g, Layered(), labels)
+plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, labels::Vector{T}) = plot(g, Layered(), labels)
 
-function plotHelper(g::LightGraphs.SimpleGraph, libraryname::String, layoutname::String, options::String)
+function plotHelper(g::LightGraphs.SimpleGraph, libraryname::AbstractString, layoutname::AbstractString, options::AbstractString)
   o = IOBuffer()
   println(o, "\\graph [$layoutname, $options] {")
   for e in LightGraphs.edges(g)
@@ -111,7 +111,7 @@ function plotHelper(g::LightGraphs.SimpleGraph, libraryname::String, layoutname:
   TikzPicture(takebuf_string(o), preamble=mypreamble)
 end
 
-function plotHelper{T<:String}(g::LightGraphs.SimpleGraph, libraryname::String, layoutname::String, options::String, labels::Vector{T})
+function plotHelper{T<:AbstractString}(g::LightGraphs.SimpleGraph, libraryname::AbstractString, layoutname::AbstractString, options::AbstractString, labels::Vector{T})
   o = IOBuffer()
   println(o, "\\graph [$layoutname, $options] {")
   for e in LightGraphs.edges(g)
@@ -139,11 +139,11 @@ function plot(g::LightGraphs.SimpleGraph, p::Spring)
   plotHelper(g, "force", "spring layout", options)
 end
 
-function plot{T<:String}(g::LightGraphs.SimpleGraph, p::Layered, labels::Vector{T})
+function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, p::Layered, labels::Vector{T})
   plotHelper(g, "layered", "layered layout", "", labels)
 end
 
-function plot{T<:String}(g::LightGraphs.SimpleGraph, p::Spring, labels::Vector{T})
+function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, p::Spring, labels::Vector{T})
   options = "random seed = $(p.randomSeed)"
   plotHelper(g, "force", "spring layout", options, labels)
 end
