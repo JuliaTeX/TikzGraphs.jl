@@ -7,6 +7,7 @@ preamble = readall(joinpath(dirname(@__FILE__), "..", "src", "preamble.tex"))
 using TikzPictures
 using Graphs
 using LightGraphs
+using Compat
 
 module Layouts
 
