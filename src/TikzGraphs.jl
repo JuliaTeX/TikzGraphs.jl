@@ -11,7 +11,7 @@ using Compat
 
 module Layouts
 
-export Layered, Spring
+export Layered, Spring, SimpleNecklace
 
 abstract Layout
 
@@ -20,7 +20,10 @@ end
 
 type Spring <: Layout
   randomSeed
-  Spring(;randomSeed=0) = new(randomSeed)
+  Spring(;randomSeed=42) = new(randomSeed)
+end
+
+type SimpleNecklace <: Layout
 end
 
 end
@@ -77,6 +80,10 @@ function plot(g::GenericGraph, p::Spring)
   plotHelper(g, "force", "spring layout", options)
 end
 
+function plot(g::GenericGraph, p::SimpleNecklace)
+  plotHelper(g, "circular", "simple necklace layout", "")
+end
+
 function plot{T<:AbstractString}(g::GenericGraph, p::Layered, labels::Vector{T})
   plotHelper(g, "layered", "layered layout", "", labels)
 end
@@ -84,6 +91,10 @@ end
 function plot{T<:AbstractString}(g::GenericGraph, p::Spring, labels::Vector{T})
   options = "random seed = $(p.randomSeed)"
   plotHelper(g, "force", "spring layout", options, labels)
+end
+
+function plot{T<:AbstractString}(g::GenericGraph, p::SimpleNecklace, labels::Vector{T})
+  plotHelper(g, "circular", "simple necklace layout", "", labels)
 end
 
 ###################################
@@ -139,6 +150,10 @@ function plot(g::LightGraphs.SimpleGraph, p::Spring)
   plotHelper(g, "force", "spring layout", options)
 end
 
+function plot(g::LightGraphs.SimpleGraph, p::SimpleNecklace)
+  plotHelper(g, "circular", "simple necklace layout", "")
+end
+
 function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, p::Layered, labels::Vector{T})
   plotHelper(g, "layered", "layered layout", "", labels)
 end
@@ -146,6 +161,10 @@ end
 function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, p::Spring, labels::Vector{T})
   options = "random seed = $(p.randomSeed)"
   plotHelper(g, "force", "spring layout", options, labels)
+end
+
+function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, p::SimpleNecklace, labels::Vector{T})
+  plotHelper(g, "circular", "simple necklace layout", "", labels)
 end
 
 end # module
