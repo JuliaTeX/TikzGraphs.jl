@@ -1,5 +1,6 @@
 using TikzGraphs
 using Base.Test
 
-# write your own tests here
-@test 1 == 1
+@assert success(`lualatex -v`)
+using NBInclude
+nbinclude(joinpath(dirname(@__FILE__), "..", "doc", "TikzGraphs.ipynb"))
