@@ -54,16 +54,14 @@ end
 function plotHelper{T<:AbstractString}(g::LightGraphs.SimpleGraph, libraryname::AbstractString, layoutname::AbstractString, options::AbstractString, labels::Vector{T})
   o = IOBuffer()
   println(o, "\\graph [$layoutname, $options] {")
+  for v in LightGraphs.vertices(g)
+    println(o, "$v/\"$(labels[v])\",")
+  end
+  println(o, ";")
   for e in LightGraphs.edges(g)
     a = src(e)
     b = dst(e)
-    println(o, "\"$(labels[a])\" -> \"$(labels[b])\";")
-  end
-  # include isolated nodes
-  for v in LightGraphs.vertices(g)
-    if indegree(g, v) == 0 && outdegree(g, v) == 0
-      println(o, "\"$(labels[v])\";")
-    end
+    println(o, "$a -> $b;")
   end
   println(o, "};")
   mypreamble = preamble * "\n\\usegdlibrary{$libraryname}"
