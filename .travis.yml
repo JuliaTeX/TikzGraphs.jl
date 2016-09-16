@@ -15,6 +15,6 @@ before_install:
   - sudo apt-get install -y texlive-pictures
   - sudo apt-get install -y texlive-latex-extra
   - sudo apt-get install -y texlive-xetex
-  - tlmgr update pgf
+  - sudo tlmgr update pgf
 after_success:
   - julia -e 'cd(Pkg.dir("TikzGraphs")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
