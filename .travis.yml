@@ -12,6 +12,7 @@ before_install:
   - sudo apt-get install -y pdf2svg
   - wget https://github.com/scottkosty/install-tl-ubuntu/raw/master/install-tl-ubuntu && chmod +x ./install-tl-ubuntu
   - sudo ./install-tl-ubuntu -p test/texlive.profile
-  - source /etc/environment
+  - PATH=$PATH:/usr/local/texlive/2016/bin/x86_64-linux/
+  - lualatex -v
 after_success:
   - julia -e 'cd(Pkg.dir("TikzGraphs")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
