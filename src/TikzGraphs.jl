@@ -2,7 +2,9 @@ module TikzGraphs
 
 export plot, Layouts
 
-preamble = readall(joinpath(dirname(@__FILE__), "..", "src", "preamble.tex"))
+using Compat
+
+preamble = readstring(joinpath(dirname(@__FILE__), "..", "src", "preamble.tex"))
 
 using TikzPictures
 using LightGraphs
