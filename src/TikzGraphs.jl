@@ -20,8 +20,8 @@ type Layered <: Layout
 end
 
 type Spring <: Layout
-  randomSeed
-  Spring(;randomSeed=42) = new(randomSeed)
+    randomSeed
+    Spring(;randomSeed=42) = new(randomSeed)
 end
 
 type SimpleNecklace <: Layout
@@ -31,69 +31,57 @@ end
 
 using .Layouts
 
-plot(g::LightGraphs.SimpleGraph) = plot(g, Layered())
-plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, labels::Vector{T}) = plot(g, Layered(), labels)
+plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, layout::Layouts.Layout, labels::Vector{T}=map(string, vertices(g)); args...) = plot(g; layout=layout, labels=labels, args...)
+plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, labels::Vector{T}; args...) = plot(g; layout=Layered(), labels=labels, args...)
 
-function plotHelper(g::LightGraphs.SimpleGraph, libraryname::AbstractString, layoutname::AbstractString, options::AbstractString)
-  o = IOBuffer()
-  println(o, "\\graph [$layoutname, $options] {")
-  for e in LightGraphs.edges(g)
-    a = src(e)
-    b = dst(e)
-    println(o, "$a -> $b;")
-  end
-  # include isolated nodes
-  for v in LightGraphs.vertices(g)
-    if indegree(g, v) == 0 && outdegree(g, v) == 0
-      println(o, "$v;")
+function edgeHelper(o::IOBuffer, a, b, edge_labels, edge_styles, edge_style)
+    print(o, " [$(edge_style),")
+    if haskey(edge_labels, (a,b))
+        print(o, "edge label={$(edge_labels[(a,b)])},")
     end
-  end
-  println(o, "};")
-  mypreamble = preamble * "\n\\usegdlibrary{$libraryname}"
-  TikzPicture(takebuf_string(o), preamble=mypreamble)
+    if haskey(edge_styles, (a,b))
+        print(o, "$(edge_styles[(a,b)]),")
+    end
+    print(o, "] ")
 end
 
-function plotHelper{T<:AbstractString}(g::LightGraphs.SimpleGraph, libraryname::AbstractString, layoutname::AbstractString, options::AbstractString, labels::Vector{T})
-  o = IOBuffer()
-  println(o, "\\graph [$layoutname, $options] {")
-  for v in LightGraphs.vertices(g)
-    println(o, "$v/\"$(labels[v])\",")
-  end
-  println(o, ";")
-  for e in LightGraphs.edges(g)
-    a = src(e)
-    b = dst(e)
-    println(o, "$a -> $b;")
-  end
-  println(o, "};")
-  mypreamble = preamble * "\n\\usegdlibrary{$libraryname}"
-  TikzPicture(takebuf_string(o), preamble=mypreamble)
+function nodeHelper(o::IOBuffer, v, labels, node_styles, node_style)
+    print(o, "$v/\"$(labels[v])\" [$(node_style)")
+    if haskey(node_styles, v)
+        print(o, ",$(node_styles[v])")
+    end
+    println(o, "],")
 end
 
-function plot(g::LightGraphs.SimpleGraph, p::Layered)
-  plotHelper(g, "layered", "layered layout", "")
+function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="")
+    o = IOBuffer()
+    println(o, "\\graph [$(layoutname(layout)), $(options(layout))] {")
+    for v in LightGraphs.vertices(g)
+        nodeHelper(o, v, labels, node_styles, node_style)
+    end
+    println(o, ";")
+    for e in LightGraphs.edges(g)
+        a = src(e)
+        b = dst(e)
+        print(o, "$a ->")
+        edgeHelper(o, a, b, edge_labels, edge_styles, edge_style)
+        println(o, "$b;")
+    end
+    println(o, "};")
+    mypreamble = preamble * "\n\\usegdlibrary{$(libraryname(layout))}"
+    TikzPicture(takebuf_string(o), preamble=mypreamble)
 end
 
-function plot(g::LightGraphs.SimpleGraph, p::Spring)
-  options = "random seed = $(p.randomSeed)"
-  plotHelper(g, "force", "spring layout", options)
+for (_layout, _libraryname, _layoutname) in [
+    (:Layered, "layered", "layered layout"),
+    (:Spring, "force", "spring layout"),
+    (:SimpleNecklace, "circular", "simple necklace layout")
+    ]
+    @eval libraryname(p::$(_layout)) = $_libraryname
+    @eval layoutname(p::$(_layout)) = $_layoutname
 end
 
-function plot(g::LightGraphs.SimpleGraph, p::SimpleNecklace)
-  plotHelper(g, "circular", "simple necklace layout", "")
-end
-
-function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, p::Layered, labels::Vector{T})
-  plotHelper(g, "layered", "layered layout", "", labels)
-end
-
-function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, p::Spring, labels::Vector{T})
-  options = "random seed = $(p.randomSeed)"
-  plotHelper(g, "force", "spring layout", options, labels)
-end
-
-function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, p::SimpleNecklace, labels::Vector{T})
-  plotHelper(g, "circular", "simple necklace layout", "", labels)
-end
+options(p::Layouts.Layout) = ""
+options(p::Spring) = "random seed = $(p.randomSeed)"
 
 end # module
