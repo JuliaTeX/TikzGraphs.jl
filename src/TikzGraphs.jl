@@ -63,7 +63,9 @@ function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph; layout::Layouts.Lay
     for e in LightGraphs.edges(g)
         a = src(e)
         b = dst(e)
-        print(o, "$a ->")
+        # print arrows only for directed graphs
+        typeof(g) == LightGraphs.DiGraph && print(o, "$a ->")
+        typeof(g) == LightGraphs.Graph && print(o, "$a --")
         edgeHelper(o, a, b, edge_labels, edge_styles, edge_style)
         println(o, "$b;")
     end
