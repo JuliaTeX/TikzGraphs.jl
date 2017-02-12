@@ -53,6 +53,10 @@ function nodeHelper(o::IOBuffer, v, labels, node_styles, node_style)
     println(o, "],")
 end
 
+# helper function for edge type
+edge_str(g::LightGraphs.DiGraph) = "->"
+edge_str(g::LightGraphs.Graph) = "--"
+
 function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="")
     o = IOBuffer()
     println(o, "\\graph [$(layoutname(layout)), $(options(layout))] {")
@@ -63,9 +67,7 @@ function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph; layout::Layouts.Lay
     for e in LightGraphs.edges(g)
         a = src(e)
         b = dst(e)
-        # print arrows only for directed graphs
-        typeof(g) == LightGraphs.DiGraph && print(o, "$a ->")
-        typeof(g) == LightGraphs.Graph && print(o, "$a --")
+        print(o, "$a $(edge_str(g))")
         edgeHelper(o, a, b, edge_labels, edge_styles, edge_style)
         println(o, "$b;")
     end
