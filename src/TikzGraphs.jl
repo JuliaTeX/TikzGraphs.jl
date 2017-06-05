@@ -11,28 +11,26 @@ using LightGraphs
 using Compat
 
 module Layouts
+    using Compat
+    export Layered, Spring, SimpleNecklace
 
-export Layered, Spring, SimpleNecklace
+    @compat abstract type Layout end
 
-abstract Layout
+    @compat struct Layered <: Layout end
 
-type Layered <: Layout
-end
+    @compat struct Spring <: Layout
+        randomSeed
+        Spring(;randomSeed=42) = new(randomSeed)
+    end
 
-type Spring <: Layout
-    randomSeed
-    Spring(;randomSeed=42) = new(randomSeed)
-end
-
-type SimpleNecklace <: Layout
-end
-
+    @compat struct SimpleNecklace <: Layout
+    end
 end
 
 using .Layouts
 
-plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, layout::Layouts.Layout, labels::Vector{T}=map(string, vertices(g)); args...) = plot(g; layout=layout, labels=labels, args...)
-plot{T<:AbstractString}(g::LightGraphs.SimpleGraph, labels::Vector{T}; args...) = plot(g; layout=Layered(), labels=labels, args...)
+plot{T<:AbstractString}(g::LightGraphs.AbstractGraph, layout::Layouts.Layout, labels::Vector{T}=map(string, vertices(g)); args...) = plot(g; layout=layout, labels=labels, args...)
+plot{T<:AbstractString}(g::LightGraphs.AbstractGraph, labels::Vector{T}; args...) = plot(g; layout=Layered(), labels=labels, args...)
 
 function edgeHelper(o::IOBuffer, a, b, edge_labels, edge_styles, edge_style)
     print(o, " [$(edge_style),")
@@ -57,7 +55,7 @@ end
 edge_str(g::LightGraphs.DiGraph) = "->"
 edge_str(g::LightGraphs.Graph) = "--"
 
-function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="")
+function plot{T<:AbstractString}(g::LightGraphs.AbstractGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="")
     o = IOBuffer()
     println(o, "\\graph [$(layoutname(layout)), $(options(layout))] {")
     for v in LightGraphs.vertices(g)
@@ -73,7 +71,7 @@ function plot{T<:AbstractString}(g::LightGraphs.SimpleGraph; layout::Layouts.Lay
     end
     println(o, "};")
     mypreamble = preamble * "\n\\usegdlibrary{$(libraryname(layout))}"
-    TikzPicture(takebuf_string(o), preamble=mypreamble)
+    TikzPicture(String(take!(o)), preamble=mypreamble)
 end
 
 for (_layout, _libraryname, _layoutname) in [
