@@ -1,4 +1,3 @@
-
 language: julia
 sudo: required
 dist: trusty
@@ -18,8 +17,9 @@ before_install:
   - wget https://github.com/scottkosty/install-tl-ubuntu/raw/master/install-tl-ubuntu && chmod +x ./install-tl-ubuntu
   - sudo ./install-tl-ubuntu -p test/texlive.profile
   - PATH=$PATH:/usr/local/texlive/2016/bin/x86_64-linux/
+  - julia -v
   - source /etc/environment
-  - /opt/texbin/lualatex -v
+  - julia -v
   - lualatex -v
 after_success:
   - julia -e 'cd(Pkg.dir("TikzGraphs")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
