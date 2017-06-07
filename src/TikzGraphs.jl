@@ -1,14 +1,15 @@
 module TikzGraphs
 
 export plot, Layouts
+import LightGraphs: DiGraph, Graph, vertices, edges, src, dst
 
 using Compat
 
 preamble = readstring(joinpath(dirname(@__FILE__), "..", "src", "preamble.tex"))
 
+const AbstractGraph = Union{Graph, DiGraph}
+
 using TikzPictures
-using LightGraphs
-using Compat
 
 module Layouts
     using Compat
@@ -16,21 +17,21 @@ module Layouts
 
     @compat abstract type Layout end
 
-    @compat struct Layered <: Layout end
+    immutable Layered <: Layout end
 
-    @compat struct Spring <: Layout
+    immutable Spring <: Layout
         randomSeed
         Spring(;randomSeed=42) = new(randomSeed)
     end
 
-    @compat struct SimpleNecklace <: Layout
+    immutable SimpleNecklace <: Layout
     end
 end
 
 using .Layouts
 
-plot{T<:AbstractString}(g::LightGraphs.AbstractGraph, layout::Layouts.Layout, labels::Vector{T}=map(string, vertices(g)); args...) = plot(g; layout=layout, labels=labels, args...)
-plot{T<:AbstractString}(g::LightGraphs.AbstractGraph, labels::Vector{T}; args...) = plot(g; layout=Layered(), labels=labels, args...)
+plot{T<:AbstractString}(g, layout::Layouts.Layout, labels::Vector{T}=map(string, vertices(g)); args...) = plot(g; layout=layout, labels=labels, args...)
+plot{T<:AbstractString}(g, labels::Vector{T}; args...) = plot(g; layout=Layered(), labels=labels, args...)
 
 function edgeHelper(o::IOBuffer, a, b, edge_labels, edge_styles, edge_style)
     print(o, " [$(edge_style),")
@@ -52,17 +53,17 @@ function nodeHelper(o::IOBuffer, v, labels, node_styles, node_style)
 end
 
 # helper function for edge type
-edge_str(g::LightGraphs.DiGraph) = "->"
-edge_str(g::LightGraphs.Graph) = "--"
+edge_str(g::DiGraph) = "->"
+edge_str(g::Graph) = "--"
 
-function plot{T<:AbstractString}(g::LightGraphs.AbstractGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="")
+function plot{T<:AbstractString}(g::AbstractGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="")
     o = IOBuffer()
     println(o, "\\graph [$(layoutname(layout)), $(options(layout))] {")
-    for v in LightGraphs.vertices(g)
+    for v in vertices(g)
         nodeHelper(o, v, labels, node_styles, node_style)
     end
     println(o, ";")
-    for e in LightGraphs.edges(g)
+    for e in edges(g)
         a = src(e)
         b = dst(e)
         print(o, "$a $(edge_str(g))")
