@@ -1,10 +1,12 @@
+__precompile__()
+
 module TikzGraphs
 
 export plot, Layouts
 import LightGraphs: DiGraph, Graph, vertices, edges, src, dst
 
 using Compat
-import Compat.ASCIIString
+import Compat.String
 
 preamble = readstring(joinpath(dirname(@__FILE__), "..", "src", "preamble.tex"))
 
@@ -73,7 +75,7 @@ function plot{T<:AbstractString}(g::AbstractGraph; layout::Layouts.Layout = Laye
     end
     println(o, "};")
     mypreamble = preamble * "\n\\usegdlibrary{$(libraryname(layout))}"
-    TikzPicture(ASCIIString(take!(o)), preamble=mypreamble)
+    TikzPicture(String(take!(o)), preamble=mypreamble)
 end
 
 for (_layout, _libraryname, _layoutname) in [
