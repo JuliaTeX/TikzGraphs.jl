@@ -59,9 +59,9 @@ end
 edge_str(g::DiGraph) = "->"
 edge_str(g::Graph) = "--"
 
-function plot{T<:AbstractString}(g::AbstractGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="")
+function plot{T<:AbstractString}(g::AbstractGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="", options="")
     o = IOBuffer()
-    println(o, "\\graph [$(layoutname(layout)), $(options(layout))] {")
+    println(o, "\\graph [$(layoutname(layout)), $(options_str(layout))] {")
     for v in vertices(g)
         nodeHelper(o, v, labels, node_styles, node_style)
     end
@@ -75,7 +75,7 @@ function plot{T<:AbstractString}(g::AbstractGraph; layout::Layouts.Layout = Laye
     end
     println(o, "};")
     mypreamble = preamble * "\n\\usegdlibrary{$(libraryname(layout))}"
-    TikzPicture(String(take!(o)), preamble=mypreamble)
+    TikzPicture(String(take!(o)), preamble=mypreamble, options=options)
 end
 
 for (_layout, _libraryname, _layoutname) in [
@@ -87,7 +87,7 @@ for (_layout, _libraryname, _layoutname) in [
     @eval layoutname(p::$(_layout)) = $_layoutname
 end
 
-options(p::Layouts.Layout) = ""
-options(p::Spring) = "random seed = $(p.randomSeed)"
+options_str(p::Layouts.Layout) = ""
+options_str(p::Spring) = "random seed = $(p.randomSeed)"
 
 end # module
