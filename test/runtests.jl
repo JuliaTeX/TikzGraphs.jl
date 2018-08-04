@@ -1,6 +1,6 @@
 using TikzGraphs
-using Base.Test
+using Test
 
 @assert success(`lualatex -v`)
 using NBInclude
-nbinclude(joinpath(dirname(@__FILE__), "..", "doc", "TikzGraphs.ipynb"))
+@nbinclude joinpath(dirname(@__FILE__), "..", "doc", "TikzGraphs.ipynb")

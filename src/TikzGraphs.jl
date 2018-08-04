@@ -5,36 +5,32 @@ module TikzGraphs
 export plot, Layouts
 import LightGraphs: DiGraph, Graph, vertices, edges, src, dst
 
-using Compat
-import Compat.String
-
-preamble = readstring(joinpath(dirname(@__FILE__), "..", "src", "preamble.tex"))
+preamble = read(joinpath(dirname(@__FILE__), "..", "src", "preamble.tex"), String)
 
 const AbstractGraph = Union{Graph, DiGraph}
 
 using TikzPictures
 
 module Layouts
-    using Compat
     export Layered, Spring, SimpleNecklace
 
-    @compat abstract type Layout end
+    abstract type Layout end
 
-    immutable Layered <: Layout end
+    struct Layered <: Layout end
 
-    immutable Spring <: Layout
+    struct Spring <: Layout
         randomSeed
         Spring(;randomSeed=42) = new(randomSeed)
     end
 
-    immutable SimpleNecklace <: Layout
+    struct SimpleNecklace <: Layout
     end
 end
 
 using .Layouts
 
-plot{T<:AbstractString}(g, layout::Layouts.Layout, labels::Vector{T}=map(string, vertices(g)); args...) = plot(g; layout=layout, labels=labels, args...)
-plot{T<:AbstractString}(g, labels::Vector{T}; args...) = plot(g; layout=Layered(), labels=labels, args...)
+plot(g, layout::Layouts.Layout, labels::Vector{T}=map(string, vertices(g)); args...) where {T<:AbstractString} = plot(g; layout=layout, labels=labels, args...)
+plot(g, labels::Vector{T}; args...) where {T<:AbstractString} = plot(g; layout=Layered(), labels=labels, args...)
 
 function edgeHelper(o::IOBuffer, a, b, edge_labels, edge_styles, edge_style)
     print(o, " [$(edge_style),")
@@ -59,7 +55,7 @@ end
 edge_str(g::DiGraph) = "->"
 edge_str(g::Graph) = "--"
 
-function plot{T<:AbstractString}(g::AbstractGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="", options="")
+function plot(g::AbstractGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="", options="") where T<:AbstractString
     o = IOBuffer()
     println(o, "\\graph [$(layoutname(layout)), $(options_str(layout))] {")
     for v in vertices(g)
