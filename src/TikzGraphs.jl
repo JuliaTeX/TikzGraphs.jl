@@ -5,9 +5,6 @@ module TikzGraphs
 export plot, Layouts
 import LightGraphs: DiGraph, Graph, vertices, edges, src, dst
 
-using Compat
-import Compat.String
-
 preamble = read(joinpath(dirname(@__FILE__), "..", "src", "preamble.tex"), String)
 
 const AbstractGraph = Union{Graph, DiGraph}
@@ -15,7 +12,6 @@ const AbstractGraph = Union{Graph, DiGraph}
 using TikzPictures
 
 module Layouts
-    using Compat
     export Layered, Spring, SimpleNecklace
 
     abstract type Layout end
