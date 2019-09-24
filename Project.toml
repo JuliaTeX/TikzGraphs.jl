@@ -1,0 +1,23 @@
+name = "TikzGraphs"
+uuid = "b4f28e30-c73f-5eaf-a395-8a9db949a742"
+version = "1.0.1"
+
+
+[deps]
+LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
+LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
+TikzPictures = "37f6aa50-8035-52d0-81c2-5a1d08754b2d"
+
+[compat]
+LaTeXStrings = "≥ 1.0.0"
+LightGraphs = "≥ 0.13.1"
+TikzPictures = "≥ 2.0.0"
+julia = "≥ 0.7"
+
+[extras]
+NBInclude = "0db19996-df87-5ea3-a455-e3a50d440464"
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["NBInclude", "Pkg", "Test"]
