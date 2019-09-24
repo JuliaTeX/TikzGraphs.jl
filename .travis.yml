@@ -17,4 +17,4 @@ before_install:
   - julia -v
   - lualatex -v
 after_success:
-  - julia -e 'cd(Pkg.dir("TikzGraphs")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
+  - julia --project -e 'import Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'  
