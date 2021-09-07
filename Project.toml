@@ -8,10 +8,10 @@ LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
 TikzPictures = "37f6aa50-8035-52d0-81c2-5a1d08754b2d"
 
 [compat]
-LaTeXStrings = "≥ 1.0.0"
-LightGraphs = "≥ 0.13.1"
-TikzPictures = "≥ 2.0.0"
-julia = "≥ 0.7"
+LaTeXStrings = "1.0, 1.1, 1.2"
+LightGraphs = "1.3"
+TikzPictures = "3.3, 3.4"
+julia = "1"
 
 [extras]
 NBInclude = "0db19996-df87-5ea3-a455-e3a50d440464"

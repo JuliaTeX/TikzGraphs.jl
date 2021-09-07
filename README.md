@@ -1,7 +1,7 @@
 # TikzGraphs
 
-[![Build Status](https://travis-ci.org/JuliaTeX/TikzGraphs.jl.svg)](https://travis-ci.org/JuliaTeX/TikzGraphs.jl)
-[![Coverage Status](https://coveralls.io/repos/github/JuliaTeX/TikzGraphs.jl/badge.svg?branch=master)](https://coveralls.io/github/JuliaTeX/TikzGraphs.jl?branch=master)
+[![Build Status](https://github.com/JuliaTeX/TikzGraphs.jl/workflows/CI/badge.svg)](https://github.com/JuliaTeX/TikzGraphs.jl/actions)
+[![codecov](https://codecov.io/gh/JuliaTeX/TikzGraphs.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaTeX/TikzGraphs.jl)
 
 This library generates graph layouts using the TikZ graph layout package.
 
