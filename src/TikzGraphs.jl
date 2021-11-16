@@ -3,7 +3,7 @@ __precompile__()
 module TikzGraphs
 
 export plot, Layouts
-import LightGraphs: DiGraph, Graph, vertices, edges, src, dst
+import Graphs: DiGraph, Graph, vertices, edges, src, dst
 
 preamble = read(joinpath(dirname(@__FILE__), "..", "src", "preamble.tex"), String)
 
