@@ -67,9 +67,9 @@ end
 edge_str(g::DiGraph) = "->"
 edge_str(g::Graph) = "--"
 
-function plot(g::AbstractGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="", options="",prepend_preamble::String="") where T<:AbstractString
+function plot(g::AbstractGraph; layout::Layouts.Layout = Layered(), labels::Vector{T}=map(string, vertices(g)), edge_labels::Dict = Dict(), node_styles::Dict = Dict(), node_style="", edge_styles::Dict = Dict(), edge_style="", options="", graph_options="", prepend_preamble::String="") where T<:AbstractString
     o = IOBuffer()
-    println(o, "\\graph [$(layoutname(layout)), $(options_str(layout))] {")
+    println(o, "\\graph [$(layoutname(layout)), $(options_str(layout)), $graph_options] {")
     for v in vertices(g)
         nodeHelper(o, v, labels, node_styles, node_style)
     end
