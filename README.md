@@ -5,4 +5,4 @@
 
 This library generates graph layouts using the TikZ graph layout package.
 
-Read the [documentation](http://nbviewer.ipython.org/github/JuliaTeX/TikzGraphs.jl/blob/master/doc/TikzGraphs.ipynb).
+Read the [documentation](https://github.com/JuliaTeX/TikzGraphs.jl/blob/master/doc/TikzGraphs.ipynb).
